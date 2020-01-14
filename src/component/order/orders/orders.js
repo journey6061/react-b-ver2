@@ -14,7 +14,7 @@ const orders =(props)=>{
     ingtest.map(res=>(
         ingg.push(
             <div key={Math.random()}>
-            <span >{res.name} ({res.amount})</span>
+            <span style={{color: 'pink'}} >{res.name} ({res.amount})</span>
             </div>
         )
     )

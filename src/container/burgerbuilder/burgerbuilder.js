@@ -9,7 +9,10 @@ import Button from '../../component/UI/button/button';
 import axios from '../../a_order';
 import Checkbutton from '../../component/burger/checkbutton';
 import Price from '../../component/burger/price';
-import Spinner from '../../component/UI/spinner/spinner'
+import Spinner from '../../component/UI/spinner/spinner';
+//import reducer from '../../store/reducer';
+import {connect} from 'react-redux';
+import * as actionType from '../../store/action'
 
 const price={
     custom1:0.4,
@@ -24,7 +27,7 @@ class burgerbuilder extends Component {
             custom2:0,
             custom3:0,
         }, */
-        ingradience:null,
+        /* ingradience:null, */
         baseprice:4,
         purchasing:false,
         //checkout:false,
@@ -33,13 +36,13 @@ class burgerbuilder extends Component {
 
     componentDidMount(){
         console.log(this.props);
-        axios.get('https://my-test1-6e78c.firebaseio.com/ingradient.json')
+        /* axios.get('https://my-test1-6e78c.firebaseio.com/ingradient.json')
         .then(response=>{
             this.setState({ingradience: response.data})
         })
         .catch( error => {
             this.setState( { error: true } );
-        } );
+        } ); */
     }
     
 
@@ -117,22 +120,31 @@ class burgerbuilder extends Component {
         })
     } */
 
+    
+
+
+
+
     render(){
         let orderList=null;
         let burgers=<Spinner />;
-        if(this.state.ingradience){
+
+        
+
+        if(this.props.ingi){
             burgers=(
                 <>
-                <Burger ingra={this.state.ingradience} buy={this.purchasable}/>
+                <Burger ingra={this.props.ingi} buy={this.purchasable}/>
                 <Burgercontrols 
-                    addmethod={this.addingradient}
-                    removemethod={this.removeingradient}
+                    //addmethod={this.addingradient}
+                    addmethod={this.props.oningradientAdd}
+                    removemethod={this.props.oningradientDel}
                     price={this.state.baseprice}
                     />
                     </>
                     );
 
-             orderList=<Ordersummery ingra={this.state.ingradience} />
+             orderList=<Ordersummery ingra={this.props.ingi} />
         }
        
         if(this.state.loading){
@@ -164,4 +176,21 @@ class burgerbuilder extends Component {
     }
 }
 
-export default burgerbuilder;
+
+const mapStateToProps=state=>{
+    return{
+        ingi:state.ingradien
+    }
+} 
+
+const mapDispatchToProps=dispatch=>{
+    return{
+        oningradientAdd:(testname)=>
+        dispatch({type:actionType.ADD_INGRAD, ingName:testname}),
+        oningradientDel:(testname)=>
+        dispatch({type:actionType.DEL_INGRAD, ingName:testname})
+    }
+} 
+
+//export default burgerbuilder;
+export default connect(mapStateToProps, mapDispatchToProps)(burgerbuilder);
